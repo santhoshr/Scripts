@@ -1,9 +1,8 @@
 ;; Caps to navigation and Space to control 
-;; Along with leader key navigation using grv: spc for default, n for navigation, r for right navigation
+;; Along with leader key navigation using grv: spc for default, i for insert, n for navigation, r for right navigation
 ;; insert mode for fast typing with no space lockups with control
-;; hold caps to toggle navigation, tab to lock navigation 
+;; hold caps to toggle navigation
 ;; navigate with Vim keys, while in navigation mode hold caps for typing characters
-;; switch to right navigation using tab while in navigation mode
 ;; hold space bar for control in default mode
 ;; Santhosh R
 ;; 18 Jan, 2023

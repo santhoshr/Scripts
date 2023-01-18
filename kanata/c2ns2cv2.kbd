@@ -26,29 +26,29 @@
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @ldn a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet @alt           @spc           ralt rmet rctl
+  lctl lmet @alt           @spc           @trn rmet rctl
 )
 
 (deflayer nav
   @fsn XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX 
-  XX   XX     C-rght XX     C-r    C-t    C-y    pgup   pgdn   XX     XX     XX     XX     XX 
-  @dft esc    XX     pgdn   lctl   home   left   down   up     rght   S-;    XX     ret
+  @dft XX     C-rght XX     C-r    C-t    C-y    home   pgup   pgdn   end    XX     XX     XX 
+  @dfc esc    XX     pgdn   lctl   home   left   down   up     rght   S-;    XX     ret
   @snv XX     XX     XX     XX     C-left XX     XX     XX     XX     XX     @snv
   XX   XX     @alt          spc           XX     XX     XX 
 )
 
 (deflayer rnv
   @fsn XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     XX     XX     bspc
-  XX   esc   pgup   up    pgdn   XX    XX    XX    XX    XX     XX     XX     XX     XX     
-  @dft home  left   down  rght   end   XX    XX    XX    XX     XX     XX     ret    
-  lsft XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     rsft
-  XX   XX    @alt         spc          XX    XX    XX 
+  @dft esc   pgup   up    pgdn   XX    XX    XX    XX    XX     XX     XX     XX     XX     
+  @dfc home  left   down  rght   end   XX    XX    XX    XX     XX     XX     ret    
+  @snv XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     @snv
+  XX   XX    @rnv         spc          XX    XX    XX 
 )
 
 (deflayer snv
   @fsn  XX     XX     XX     A-f4   XX     XX     XX     XX     XX     XX     XX     XX     XX 
   @rnv  C-q    C-w    XX     XX     XX     XX     C-S-t  XX     XX     XX     XX     XX     XX 
-  @dft  XX     XX     XX     XX     end    bspc   XX     XX     XX     ;      XX     ret
+  @dfc  XX     XX     XX     XX     end    bspc   XX     XX     XX     ;      XX     ret
   _     C-z    C-x    C-c    C-v    XX     XX     XX     XX     XX     XX     _  
   XX    XX     @alt          S-spc         XX     XX     XX 
 )
@@ -64,13 +64,14 @@
 (defalias
   def (layer-switch default)
   rnv (layer-switch rnv)
+  trn (layer-toggle rnv)
   fsi (tap-dance 200 ((layer-switch insert) (layer-switch nav)))
   fsd (tap-dance 200 ((layer-switch default) (layer-switch nav)))
   fsn (tap-dance 200 ((layer-switch default) (layer-switch insert)))
   snv (layer-toggle snv)
-  dft (tap-hold-release 150 150 @def (layer-toggle default))
+  dft (tap-hold-release 150 150 @def (layer-toggle insert))
+  dfc (tap-hold-release 150 150 @def (multi caps (layer-toggle insert)))
   ldn (layer-toggle nav)
-  dfc (tap-hold-release 150 150 @def caps)
   spc (tap-hold-release 150 150 spc lctl)
   alt (multi lalt (layer-toggle insert))
 )

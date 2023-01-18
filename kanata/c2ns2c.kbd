@@ -1,17 +1,10 @@
 ;; Caps to navigation and Space to control 
-;; Along with leader key navigation
-;; insert mode for fast typing with no space lockups
+;; Along with leader key navigation using grv: spc for default, n for navigation, r for right navigation
+;; insert mode for fast typing with no space lockups with control
 ;; hold caps to toggle navigation, tab to lock navigation 
 ;; navigate with Vim keys, while in navigation mode hold caps for typing characters
 ;; switch to right navigation using tab while in navigation mode
-;; single tap caps for leader option, i for insert mode, n for navigation, r for right navigation
-;; hold space bar for control
-;; general rule of thumb
-;; sldr will be available only from default mode much like vim / esc or normal mode
-;; from every other layout single tap caps will lead to default mode
-;; holding caps will differ for navigation layers holding will give alaphabets
-;; for alphabet layer holding will act like modifier, caps, hyper, etc
-;; currently holding in normal will activate vim keys and holding in insert mode activate caps for Enso launcher 
+;; hold space bar for control in default mode
 ;; Santhosh R
 ;; 18 Jan, 2023
 ;; Using with kanata 1.1.0 on Windows 10 22H2
@@ -19,67 +12,77 @@
 (defcfg)
 
 (defsrc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            ralt rmet rctl
+    grv    1      2      3     4      5      6      7   8   9   0   -      =     bspc
+    tab    q      w      e     r      t      y      u   i   o   p   [      ]     \
+    caps   a      s      d     f      g      h      j   k   l   ;   '      ret
+    lsft   z      x      c     v      b      n      m   ,   .   /   rsft
+    lctl   lmet   lalt   spc   ralt   rmet   rctl
 )
 
 (deflayer default
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @ldn a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet @alt           @spc           ralt rmet rctl
+    @gld   1      2      3      4      5      6      7   8   9   0   -      =     bspc
+    tab    q      w      e      r      t      y      u   i   o   p   [      ]     \
+    @caps  a      s      d      f      g      h      j   k   l   ;   '      ret
+    lsft   z      x      c      v      b      n      m   ,   .   /   rsft
+    lctl   lmet   @alt   @spc   @trn   rmet   rctl
 )
 
 (deflayer nav
-  grv  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX 
-  @nvs C-q    C-rght XX     C-r    C-t    C-y    pgup   pgdn   XX     XX     XX     XX     XX 
-  @dft esc    XX     pgdn   lctl   home   left   down   up     rght   S-;    XX     ret
-  @snv C-z    del    C-z    C-v    C-left XX     XX     XX     XX     XX     @snv
+  @gld XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX 
+  @dft XX     C-rght XX     C-r    C-t    C-y    home   pgup   pgdn   end    XX     XX     XX 
+  @dfc esc    XX     pgdn   lctl   home   left   down   up     rght   S-;    XX     ret
+  @snv XX     XX     XX     XX     C-left XX     XX     XX     XX     XX     @snv
   XX   XX     @alt          spc           XX     XX     XX 
 )
 
 (deflayer rnv
-  XX   XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     XX     XX     bspc
-  @nvs esc   pgup   up    pgdn   XX    XX    XX    XX    XX     XX     XX     XX     XX     
-  @dft home  left   down  rght   end   XX    XX    XX    XX     XX     XX     ret    
-  lsft XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     rsft
-  XX   XX    @alt         spc          XX    XX    XX 
+  @gld XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     XX     XX     bspc
+  @dft esc   pgup   up    pgdn   XX    XX    XX    XX    XX     XX     XX     XX     XX     
+  @dfc home  left   down  rght   end   XX    XX    XX    XX     XX     XX     ret    
+  @snv XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     @snv
+  XX   XX    @rnv         spc          XX    XX    XX 
 )
 
 (deflayer snv
-  grv   XX     XX     XX     A-f4   XX     XX     XX     XX     XX     XX     XX     XX     XX 
-  @rnv  XX     C-w    XX     XX     XX     XX     C-S-t  XX     XX     XX     XX     XX     XX 
-  @dft  XX     XX     XX     XX     end    bspc   XX     XX     XX     ;      XX     ret
-  _     XX     C-x    XX     XX     XX     XX     XX     XX     XX     XX     _  
+  @gld  XX     XX     XX     A-f4   XX     XX     XX     XX     XX     XX     XX     XX     XX 
+  XX    C-q    C-w    XX     XX     XX     XX     C-S-t  XX     XX     XX     XX     XX     XX 
+  @dfc  XX     XX     XX     XX     end    bspc   XX     XX     XX     ;      XX     ret
+  _     C-z    C-x    C-c    C-v    XX     XX     XX     XX     XX     XX     _  
   XX    XX     @alt          S-spc         XX     XX     XX 
 )
 
 (deflayer insert
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @dfc a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet @alt           spc            ralt rmet rctl
+    @gli   1      2      3     4      5      6      7   8   9   0   -      =     bspc
+    tab    q      w      e     r      t      y      u   i   o   p   [      ]     \
+    @dfc   a      s      d     f      g      h      j   k   l   ;   '      ret
+    lsft   z      x      c     v      b      n      m   ,   .   /   rsft
+    lctl   lmet   @alt   spc   @trn   rmet   rctl
 )
 
-(defseq insert-mode (i))
-(deffakekeys insert-mode (layer-switch insert))
-(defseq navigation-shortcuts (n))
-(deffakekeys navigation-shortcuts (layer-switch nav))
-(defseq right-navigation (r))
-(deffakekeys right-navigation (layer-switch rnv))
+(defseq 
+	imode (grv i)
+ 	nvs (grv n)
+ 	rnav (grv r)
+ 	defm (grv spc)
+)
+(deffakekeys 
+	imode (layer-switch insert)
+	nvs (layer-switch nav)
+	rnav (layer-switch rnv)
+	defm (layer-switch default)
+)
 (defalias
+  grv (multi sldr (macro 1 grv))
+  gld (multi @grv (layer-toggle insert))
+  gli (multi @grv (layer-toggle default))
   def (layer-switch default)
-  dft (tap-hold-release 150 150 @def (layer-toggle default))
+  dft (tap-hold-release 150 150 @def (layer-toggle default) )
   nvs (layer-switch nav)
   rnv (layer-switch rnv)
+  trn (layer-toggle rnv)
   snv (layer-toggle snv)
-  ldn (tap-hold-release 150 150 sldr (layer-toggle nav))
-  dfc (tap-hold-release 150 150 @def caps)
+  dfc (tap-hold-release 150 150 @def (multi caps (layer-toggle default)))
   spc (tap-hold-release 150 150 spc lctl)
   alt (multi lalt (layer-toggle insert))
+  caps (tap-hold-release 150 150 esc (layer-toggle nav))
 )

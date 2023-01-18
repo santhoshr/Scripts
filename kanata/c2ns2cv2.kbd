@@ -1,0 +1,76 @@
+;; Caps to navigation and Space to control 
+;; insert mode for fast typing with no space lockups
+;; hold caps to toggle navigation, tab to lock navigation 
+;; navigate with Vim keys, while in navigation mode hold caps for typing characters
+;; switch to right navigation using tab while in navigation mode
+;; hold space bar for control
+;; currently holding in normal will activate vim keys and holding in insert mode activate caps for Enso launcher 
+;; fastswitch single tap grv toggles between default and insert, double tap always nav 
+;; in nav single tap grv to change to default mode and double tap to insert mode
+;; Santhosh R
+;; 18 Jan, 2023
+;; Using with kanata 1.1.0 on Windows 10 22H2
+
+(defcfg)
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+(deflayer default
+  @fsi 1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @ldn a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet @alt           @spc           ralt rmet rctl
+)
+
+(deflayer nav
+  @fsn XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX 
+  XX   XX     C-rght XX     C-r    C-t    C-y    pgup   pgdn   XX     XX     XX     XX     XX 
+  @dft esc    XX     pgdn   lctl   home   left   down   up     rght   S-;    XX     ret
+  @snv XX     XX     XX     XX     C-left XX     XX     XX     XX     XX     @snv
+  XX   XX     @alt          spc           XX     XX     XX 
+)
+
+(deflayer rnv
+  @fsn XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     XX     XX     bspc
+  XX   esc   pgup   up    pgdn   XX    XX    XX    XX    XX     XX     XX     XX     XX     
+  @dft home  left   down  rght   end   XX    XX    XX    XX     XX     XX     ret    
+  lsft XX    XX     XX    XX     XX    XX    XX    XX    XX     XX     rsft
+  XX   XX    @alt         spc          XX    XX    XX 
+)
+
+(deflayer snv
+  @fsn  XX     XX     XX     A-f4   XX     XX     XX     XX     XX     XX     XX     XX     XX 
+  @rnv  C-q    C-w    XX     XX     XX     XX     C-S-t  XX     XX     XX     XX     XX     XX 
+  @dft  XX     XX     XX     XX     end    bspc   XX     XX     XX     ;      XX     ret
+  _     C-z    C-x    C-c    C-v    XX     XX     XX     XX     XX     XX     _  
+  XX    XX     @alt          S-spc         XX     XX     XX 
+)
+
+(deflayer insert
+  @fsd 1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @dfc a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet @alt           spc            ralt rmet rctl
+)
+
+(defalias
+  def (layer-switch default)
+  rnv (layer-switch rnv)
+  fsi (tap-dance 200 ((layer-switch insert) (layer-switch nav)))
+  fsd (tap-dance 200 ((layer-switch default) (layer-switch nav)))
+  fsn (tap-dance 200 ((layer-switch default) (layer-switch insert)))
+  snv (layer-toggle snv)
+  dft (tap-hold-release 150 150 @def (layer-toggle default))
+  ldn (layer-toggle nav)
+  dfc (tap-hold-release 150 150 @def caps)
+  spc (tap-hold-release 150 150 spc lctl)
+  alt (multi lalt (layer-toggle insert))
+)

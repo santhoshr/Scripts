@@ -1,0 +1,117 @@
+#|
+(deflayer emp
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX
+)
+|#
+
+(defcfg
+  process-unmapped-keys yes
+  ;; log-layer-changes no
+  ;; movemouse-inherit-accel-state yes
+  ;; movemouse-smooth-diagonals yes
+)
+
+(defsrc
+    esc    1      2      3     4      5      6      7      8      9   0   -      =     bspc   grv   
+    tab    q      w      e     r      t      y      u      i      o   p   [      ]     \      del
+    caps   a      s      d     f      g      h      j      k      l   ;   '      ret   pgup
+    lsft   z      x      c     v      b      n      m      ,      .   /   rsft   up    pgdn
+    lctl   lmet   lalt   spc   ralt   rctl   left   down   rght
+)
+
+;; buttons layers one
+(defalias
+  typ (layer-switch def)
+  nv (layer-switch nav)
+  br (layer-switch browser)
+  wf (layer-switch wfile)
+  os (layer-toggle sw)
+)
+
+;; default layer buttons
+(defalias 
+  dln (tap-hold-press 135 135 @nv lsft)
+  drw (tap-hold-press 135 135 @wf rsft)
+)
+
+;; buttons
+(defalias
+  cap (tap-hold-press 135 135 esc caps)
+  at (tap-hold-press 135 135 3 (multi lalt @os))
+  ms (tap-dance 1000 (@nv @typ))
+)
+
+;; for Navigation
+(defalias
+  nct (multi lctl (layer-toggle def))
+  ltt (layer-toggle def)
+  hty (tap-hold-press 135 135 @typ @ltt)
+)
+
+;; for Browsing
+(defalias
+  nt (multi C-t (layer-switch bdef))
+  et (multi ret @br)
+  es (multi esc @br)
+  cp (tap-hold-press 135 135 @es caps)
+)
+
+;; for explorer / list view
+(defalias
+  wfc (tap-hold-press 135 135 bspc @nv)
+  wfo (tap-hold-press 135 135 f3 (multi lalt @os))
+  wfe (tap-hold-press 135 135 ret lalt)
+  wfr (tap-hold-press 135 135 esc rsft)
+)
+
+(deflayer  def
+    esc    1       2      @at    4      5      6      7      8        9        0      -         =       bspc   grv   
+    tab    q       w      e      r      t      y      u      i        o        p      [         ]       \      del
+    @cap   a       s      d      f      g      h      j      k        l        ;      '         ret     pgup
+    @dln   z       x      c      v      b      n      m      ,        .        /      @drw      up      pgdn
+    lctl   lmet    lalt   spc    ralt   rctl   left   down   rght
+)
+
+(deflayer  nav
+    esc    1       2      @at     XX     XX     XX     XX     XX       XX       XX     XX        XX      XX     XX
+    tab    A-f4    pgup   up     pgdn   XX     XX     home   pgup     pgdn     end    XX        XX      XX     XX
+    @hty   home    left   down   rght   end    left   down   up       rght     XX     XX        _       XX
+    XX     home    end    XX     XX     XX     XX     XX     XX       @br      XX     XX        XX      XX
+    XX     XX      _      @nct   XX     XX     XX     XX     XX
+)
+
+(deflayer  browser
+    _      XX      XX     @at    XX     XX     XX     XX     XX       XX       XX     XX        XX      XX     XX
+    tab    A-f4    C-w    pgup   C-r    @nt    XX     pgup   A-left   A-rght   pgdn   C-S-tab   C-tab   XX     XX
+    @hty   home    XX     pgdn   XX     end    left   down   up       rght     XX     XX        _       XX
+    XX     C-S-t   C-w    XX     pgdn   pgup   XX     XX     XX       @nv      XX     XX        XX      XX
+    XX     XX      XX     spc    XX     XX     XX     XX     XX
+)
+
+(deflayer  bdef
+    @es    1       2      @at    4      5      6      7      8        9        0      -         =       bspc   grv   
+    tab    q       w      e      r      t      y      u      i        o        p      [         ]       \      del
+    @cp    a       s      d      f      g      h      j      k        l        ;      '         @et     pgup
+    lsft   z       x      c      v      b      n      m      ,        .        /      rsft      up      pgdn
+    lctl   lmet    lalt   spc    ralt   rctl   left   down   rght
+)
+
+(deflayer  wfile
+    esc    f1     f2      @wfo   4     f5     f6     f7     f8       f9       f10    f11       f12     bspc   grv   
+    tab    q       w      e      r      t      y      u      i        o        p      [         ]       \      del
+    @wfc   a       s      d      f      g      h      j      k        l        ;      '         @wfe    pgup
+    @typ   z       x      c      v      b      n      m      ,        .        /      rsft      up      pgdn
+    lctl   lmet    lalt   spc    ralt   rctl   left   down   rght
+)
+
+(deflayer  sw
+    XX     XX      XX     XX     XX     XX     XX     XX     XX       XX       XX     XX        XX      XX     XX
+    XX     XX      XX     XX     XX     XX     XX     XX     XX       XX       XX     XX        XX      XX     XX
+    XX     XX      XX     XX     XX     XX     XX     XX     XX       XX       XX     XX        XX      XX
+    XX     XX      XX     XX     XX     XX     XX     XX     S-tab    tab      XX     XX        XX      XX
+    XX     XX      XX     XX     XX     XX     XX     XX     XX
+)

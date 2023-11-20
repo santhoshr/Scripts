@@ -1,0 +1,66 @@
+#|
+(deflayer emp
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX
+)
+|#
+
+(defcfg
+  process-unmapped-keys yes
+)
+
+(defvar
+  to 150
+)
+
+(defalias
+  df (layer-switch def)
+  nv (layer-switch nav)
+  dft (layer-toggle def)
+  nvt (layer-toggle nav)
+  ct (multi lctl @dft)
+  ;; mt (multi lmet @dft)
+  at (multi lalt @dft)
+  sp (tap-hold-press $to $to spc (multi @dft lctl))
+  mt (tap-hold-press $to $to rmet (multi @dft lmet))
+  la (tap-hold-press $to $to lalt (multi @dft lalt))
+  lc (tap-hold-press $to $to lctl (multi @dft lctl))
+  dr (fork ret (multi @nv (unmod ret)) (lsft rsft))
+  nt (multi @df C-t)
+  sm (switch 
+    (lsft) S-; break
+    (rsft) (unmod ;) break
+    (lmet rmet) M-; break
+    (lctl rctl) C-; break
+    () @nv break
+  )
+  ls (tap-hold-press $to $to bspc @dft)
+  rs (tap-hold-press $to $to esc @dft)
+)
+
+(defsrc
+            esc    1       2      3      4      5      6      7      8        9        0      -         =       bspc   grv   
+            tab    q       w      e      r      t      y      u      i        o        p      [         ]       \      del
+            caps   a       s      d      f      g      h      j      k        l        ;      '         ret     pgup
+            lsft   z       x      c      v      b      n      m      ,        .        /      rsft      up      pgdn
+            lctl   lmet    lalt   spc    ralt   rctl   left   down   rght
+)
+
+(deflayer   def    
+            esc    1       2      3      4      5      6      7      8        9        0      -         =       bspc   grv   
+            tab    q       w      e      r      t      y      u      i        o        p      [         ]       \      del
+            caps   a       s      d      f      g      h      j      k        l        @sm    '         @dr     pgup
+            lsft   z       x      c      v      b      n      m      ,        .        /      rsft      up      pgdn
+            lctl   lmet    lalt   spc    ralt   rctl   left   down   rght
+)
+
+(deflayer   nav    
+            _      XX      XX     XX     XX     XX     XX     XX     XX       XX       XX     XX        XX      XX     XX
+            tab    A-f4    C-w    pgup   C-r    @nt    XX     pgup   A-left   A-rght   pgdn   C-S-tab   C-tab   XX     XX
+            caps   home    XX     pgdn   XX     end    left   down   up       rght     @df    '         ret     XX
+            @ls    C-S-t   C-w    XX     pgdn   pgup   XX     XX     XX       @nv      XX     @rs       XX      XX
+            @ct    @mt     @at    @sp    XX     XX     XX     XX     XX
+)

@@ -2,7 +2,32 @@
 runs on Ventura/ ruby 2.6.10p210 (2022-04-12 revision 67958) [universal.arm64e-darwin22] on Mac Mini M2
 
 > fedora 38 on PC
-- Todo
+$ neofetch
+OS: Fedora Linux 38 (Workstation Edition) x86_64 
+Host: Z790 UD AX 
+Kernel: 6.6.9-100.fc38.x86_64 
+Uptime: 1 hour, 26 mins 
+Packages: 2293 (rpm), 9 (brew), 21 (flatpak) 
+Shell: bash 5.2.21 
+Resolution: 3840x2160 
+DE: GNOME 44.7 
+WM: Mutter 
+WM Theme: Adwaita 
+Theme: Adwaita [GTK2/3] 
+Icons: Adwaita [GTK2/3] 
+CPU: 13th Gen Intel i5-13600K (20) @ 5.100GHz 
+GPU: NVIDIA GeForce RTX 2080 Ti Rev. A 
+GPU: Intel Raptor Lake-S GT1 [UHD Graphics 770] 
+Memory: 2924MiB / 31856MiB 
+
+$ uname -a
+  | Linux DESKTOP-SAN.Dlink 6.6.9-100.fc38.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Jan  1 20:31:07 UTC 2024 x86_64 GNU/Linux
+
+$ ruby -v
+  | ruby 3.0.4p208 (2022-04-12 revision 3fa771dded) [x86_64-linux]
+
+$ rbenv version
+  | 3.0.4 (set by RBENV_VERSION environment variable)
 
 > fedora 37 on PC
 - Todo

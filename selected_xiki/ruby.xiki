@@ -30,4 +30,31 @@ $ rbenv version
   | 3.0.4 (set by RBENV_VERSION environment variable)
 
 > fedora 37 on PC
-- Todo
+$ neofetch
+OS: Fedora Linux 37 (Workstation Edition) x86_64 
+Host: Z790 UD AX 
+Kernel: 6.5.12-100.fc37.x86_64 
+Uptime: 5 mins 
+Packages: 2503 (rpm), 2 (flatpak) 
+Shell: bash 5.2.21 
+Resolution: 3840x2160 
+DE: GNOME 43.9 
+WM: Mutter 
+WM Theme: Adwaita 
+Theme: Adwaita [GTK2/3] 
+Icons: Adwaita [GTK2/3] 
+Terminal: ruby-mri 
+CPU: 13th Gen Intel i5-13600K (20) @ 5.100GHz 
+GPU: NVIDIA GeForce RTX 2080 Ti Rev. A 
+GPU: Intel Raptor Lake-S GT1 [UHD Graphics 770] 
+Memory: 3127MiB / 31844MiB 
+
+$ uname -a
+  | Linux DESKTOP-SAN.Dlink 6.5.12-100.fc37.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Nov 20 22:28:44 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+
+$ ruby -v
+  | ruby 3.1.4p223 (2023-03-30 revision 957bb7cb81) [x86_64-linux]
+
+$ rbenv version
+  | bash: line 178: rbenv: command not found
+

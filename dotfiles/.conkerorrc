@@ -1,0 +1,324 @@
+// homepage
+homepage = "https://google.co.in"
+
+// duplicate buffer
+interactive("duplicate-buffer", "Duplicate buffer",
+	function (I) {
+		browser_object_follow(I.buffer, OPEN_NEW_BUFFER, I.buffer.current_uri.spec);
+	});
+
+// define mappings
+// define_key(content_buffer_normal_keymap, "d", "follow-new-buffer");
+define_key(content_buffer_normal_keymap, "q", "delete-window");
+define_key(content_buffer_normal_keymap, "d", "kill-current-buffer");
+define_key(content_buffer_normal_keymap, "j", "cmd_scrollLineDown");
+define_key(content_buffer_normal_keymap, "k", "cmd_scrollLineUp");
+define_key(content_buffer_normal_keymap, "M-R", "reinit");
+define_key(content_buffer_normal_keymap, "n", "make-window");
+
+// download directory
+/*
+function update_save_path (info) {
+  cwd = info.target_file.parent;
+}
+*/
+
+// add_hook("download_added_hook", update_save_path);
+
+hints_auto_exit_delay=200;
+
+url_completion_use_history = true;
+
+define_browser_object_class(
+    "history-url", null, 
+    function (I, prompt) {
+        check_buffer (I.buffer, content_buffer);
+        var result = yield I.buffer.window.minibuffer.read_url(
+            $prompt = prompt,  $use_webjumps = false, $use_history = true, $use_bookmarks = false);
+        yield co_return (result);
+    });
+
+interactive("find-url-from-history",
+            "Find a page from history in the current buffer",
+            "find-url",
+            $browser_object = browser_object_history_url);
+
+interactive("find-url-from-history-new-buffer",
+            "Find a page from history in a new buffer",
+            "find-url-new-buffer",
+            $browser_object = browser_object_history_url);
+
+define_key(content_buffer_normal_keymap, "h", "find-url-from-history-new-buffer");
+define_key(content_buffer_normal_keymap, "H", "find-url-from-history");
+
+add_hook("mode_line_hook", mode_line_adder(buffer_count_widget), true);
+
+require("new-tabs.js");
+
+require("favicon");
+
+add_hook("mode_line_hook", mode_line_adder(buffer_icon_widget), true);
+
+read_buffer_show_icons = true;
+
+define_key(content_buffer_normal_keymap, "y", "copy", $browser_object = browser_object_dom_node);
+
+register_user_stylesheet(make_css_data_uri(["* { image-rendering: -moz-crisp-edges; }"]));
+
+require("block-content-focus-change.js");
+
+block_content_focus_change_duration = 40;
+
+session_pref("browser.formfill.enable", true);
+
+require("global-overlay-keymap");
+define_key_alias("C-i", 'tab');
+
+can_kill_last_buffer = false;
+
+require("mode-line.js");
+
+require("daemon.js");
+ 
+require("extensions/dom-inspector.js");
+
+session_pref("xpinstall.whitelist.required", false);
+
+// buffer history
+
+interactive("browse-buffer-history",
+            "Browse the session history for the current buffer",
+            function browse_buffer_history (I) {
+                var b = check_buffer(I.buffer, content_buffer);
+                var history = b.web_navigation.sessionHistory;
+
+                if (history.count > 1) {
+                    var entries = [];
+
+                    for(var i = 0 ; i < history.count ; i += 1) {
+                        entries[i] = history.getEntryAtIndex(i, false).URI.spec;
+                    }
+
+                    var url = yield I.minibuffer.read(
+                        $prompt = "Go back or forward to:",
+                        $completer = new all_word_completer($completions = entries),
+                        $default_completion = history.index > 0 ? entries[history.index - 1] : entries[history.index + 1],
+                        $auto_complete = "url",
+                        $auto_complete_initial = true,
+                        $auto_complete_delay = 0,
+                        $require_match = true);
+
+                    b.web_navigation.gotoIndex(entries.indexOf(url));
+                } else {
+                    I.window.minibuffer.message("No history");
+                }
+            });
+
+function define_switch_buffer_key (key, buf_num) {
+    define_key(default_global_keymap, key,
+               function (I) {
+                   switch_to_buffer(I.window,
+                                    I.window.buffers.get_buffer(buf_num));
+               });
+}
+for (let i = 0; i < 10; ++i) {
+    define_switch_buffer_key(String((i+1)%10), i);
+}
+
+define_key(content_buffer_normal_keymap, "s", "browse-buffer-history");
+
+interactive("switch-to-other-buffer",
+            "Switch to the previously open buffer",
+            function (I) {
+                var blist = I.window.buffers.buffer_list
+                if (blist.length > 1)
+                    switch_to_buffer(I.window, blist[1]);
+            });
+define_key(content_buffer_normal_keymap, "`", "switch-to-other-buffer");
+
+var kill_buffer_original = kill_buffer_original || kill_buffer;
+
+var killed_buffers = [];
+
+kill_buffer = function (buffer, force) {
+    if (buffer.display_uri_string) {
+        killed_buffers.push({url: buffer.display_uri_string,
+                             title: buffer.title,
+                             history: buffer.web_navigation.sessionHistory});
+    }
+
+    kill_buffer_original(buffer,force);
+};
+
+interactive("restore-killed-buffer-url", "Loads url from a previously killed buffer",
+            function restore_killed_buffer_url (I) {
+                if (killed_buffers.length !== 0) {
+                    var killed_buffer = yield I.minibuffer.read(
+                        $prompt = "Restore killed buffer url:",
+                        $completer = new all_word_completer($completions = killed_buffers,
+                                                            $get_string = function (x) x.url,
+                                                            $get_description = function (x) x.title),
+                        $default_completion = killed_buffers[killed_buffers.length - 1],
+                        $auto_complete = "url",
+                        $auto_complete_initial = true,
+                        $auto_complete_delay = 0,
+                        $require_match = true
+                    );
+
+                    load_url_in_new_buffer(killed_buffer.url);
+
+                    var buf = I.window.buffers.current;
+                    buf.web_navigation.sessionHistory = killed_buffer.history;
+                    var original_index = buf.web_navigation.sessionHistory.index;
+                    buf.web_navigation.gotoIndex(original_index);
+
+                } else {
+                    I.window.minibuffer.message("No killed buffer urls");
+                }
+            });
+define_key(content_buffer_normal_keymap, "U", "restore-killed-buffer-url");
+
+register_user_stylesheet(
+    "data:text/css," +
+        escape(
+            "@namespace url(\"http://www.w3.org/1999/xhtml\");\n" +
+            "span.__conkeror_hint {\n"+
+            "  font-size: 18px !important;\n"+
+            "  line-height: 18px !important;\n"+
+            "}"));
+
+// zoom
+
+user_pref("browser.zoom.full", true);
+function my_zoom_set (buffer) {
+    browser_zoom_set(buffer, false, 100);
+}
+add_hook('create_buffer_late_hook', my_zoom_set);
+
+// dark page
+
+function darken_page (I) {
+    var styles='* { background: black !important; color: grey !important; }'+
+        ':link, :link * { color: #4986dd !important; }'+
+        ':visited, :visited * { color: #d75047 !important; }';
+    var document = I.buffer.document;
+    var newSS=document.createElement('link');
+    newSS.rel='stylesheet';
+    newSS.href='data:text/css,'+escape(styles);
+    document.getElementsByTagName("head")[0].appendChild(newSS);
+}
+
+interactive("darken-page", "Darken the page in an attempt to save your eyes.",
+            darken_page);
+define_key(content_buffer_normal_keymap, "C-d", "darken-page");
+
+interactive("modi", "The Mouseover DOM Inspector, or MODI for short, is a favelet (also known as a bookmarklet)"
+            + " that allows you to view and manipulate the DOM of a web page simply "
+            + "by mousing around the document (http://slayeroffice.com/tools/modi/v2.0/modi_help.html).",
+           function(I) {
+               z=I.buffer.document.body.appendChild(I.buffer.document.createElement('script'));
+               z.language='javascript';
+               z.type='text/javascript';
+               z.src='http://slayeroffice.com/tools/modi/v2.0/modi_v2.0.1.js';
+               z.id='modi';
+           });
+
+// examine elements
+interactive("examine-element",
+            "Examine the attributes and style of a DOM node.",
+            function print_attribute (I) {
+                var element = yield read_browser_object(I);
+                var list = [];
+                var style = I.window.getComputedStyle(element);
+                var attributes = element.attributes;
+                var name = element.tagName.toLowerCase();
+
+                if (element.id) {
+                    name += "#" + element.id;
+                }
+
+                for (i = 0 ; i < element.classList.length ; i += 1) {
+                    name += "." + element.classList.item(i);
+                }
+                
+                for (i = 0 ; i < style.length ; i += 1) {
+                    list.push([style.item(i), 1]);
+                }
+
+                for (i = 0 ; i < attributes.length ; i += 1) {
+                    list.push([attributes.item(i).name, 2]);
+                }
+                
+                yield I.minibuffer.read(
+                    $prompt = name + ":",
+                    $completer = new prefix_completer(
+                        $completions = list.sort(),
+                        $get_string = function(item) item[0],
+                        $get_description = function(item) {
+                            var s, value;
+
+                            switch(item[1]) {
+                            case 1:
+                                s = "CSS property";
+                                value = style.getPropertyValue(item[0]);
+                                
+                                break;
+                                
+                            case 2:
+                                s = "Attribute";
+                                value = element.getAttribute(item[0]);
+                                
+                                break;
+                            }
+                            
+                            if (value) {
+                                s += " with value " + value;
+                            }
+                            
+                            return s;
+                        }),
+                    $auto_complete = true,
+                    $auto_complete_initial = true,
+                    $auto_complete_delay = 0,
+                    $require_match = false);
+            },
+            $browser_object = browser_object_dom_node);
+define_key(content_buffer_normal_keymap, "x", "examine-element");
+
+// jquery
+function install_jquery(d) {
+    var script_el = d.createElementNS(XHTML_NS, "script");
+    script_el.setAttribute("language", "javascript");
+    script_el.setAttribute("type", "text/javascript");
+    script_el.setAttribute("src", "http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js");
+    d.body.appendChild(script_el);
+}
+
+function jquery_this_doc(d, js_code) {
+    install_jquery(d);
+    var script_el = d.createElementNS(XHTML_NS, "script");
+    script_el.textContent = js_code;
+    d.body.appendChild(script_el);
+}
+
+interactive("jquery-here",
+            "load jquery.js into this page, then your command",
+            function(I) {
+                jquery_this_doc(I.buffer.document, (yield I.minibuffer.read($prompt = "jq: ", $history = "jquery-here")));
+                // Providing a $history is what allows editing/replay of earlier commands
+            });
+
+
+// themes
+theme_load("sano")
+
+// downloads
+cwd = get_home_directory();
+cwd.append("Downloads")
+download_buffer_automatic_open_target = OPEN_NEW_BUFFER_BACKGROUND;
+
+// user_prefs
+user_pref("font.minimum-size.x-western", 14);
+user_pref("font.size.fixed.x-western", 14);
+user_pref("font.size.variable.x-western", 14);
+

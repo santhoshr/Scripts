@@ -1,0 +1,41 @@
+#|
+shift+caps -> caps
+caps -> tap to esc, hold to ctrl
+ret -> tap to ret, hold to ctrl
+|#
+
+#|
+(deflayer emp
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
+    XX   XX   XX   XX   XX   XX   XX   XX   XX
+)
+|#
+
+(defcfg
+  process-unmapped-keys yes
+)
+
+(defsrc
+    esc    1      2      3     4      5      6      7      8      9   0   -      =     bspc   grv   
+    tab    q      w      e     r      t      y      u      i      o   p   [      ]     \      del
+    caps   a      s      d     f      g      h      j      k      l   ;   '      ret   pgup
+    lsft   z      x      c     v      b      n      m      ,      .   /   rsft   up    pgdn
+    lctl   lmet   lalt   spc   ralt   rctl   left   down   rght
+)
+
+(defalias
+  cap (fork (tap-hold-release 135 135 esc lctl) caps (lsft rsft))
+  ret (tap-hold-release 135 135 ret rctl)
+)
+
+(deflayer  def
+    esc    1      2      3     4      5      6      7      8      9   0   -      =     bspc   grv   
+    tab    q      w      e     r      t      y      u      i      o   p   [      ]     \      del
+    @cap   a      s      d     f      g      h      j      k      l   ;   '      @ret  pgup
+    lsft   z      x      c     v      b      n      m      ,      .   /   rsft   up    pgdn
+    lctl   lmet   lalt   spc   ralt   rctl   left   down   rght
+)
+

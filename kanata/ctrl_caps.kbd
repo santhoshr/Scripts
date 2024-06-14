@@ -16,6 +16,7 @@ ret -> tap to ret, hold to ctrl
 
 (defcfg
   process-unmapped-keys yes
+  concurrent-tap-hold yes
 )
 
 (defsrc
@@ -27,8 +28,8 @@ ret -> tap to ret, hold to ctrl
 )
 
 (defalias
-  cap (fork (tap-hold-release 135 135 esc lctl) caps (lsft rsft))
-  ret (tap-hold-release 135 135 ret rctl)
+ cap (fork (tap-hold-release 135 135 esc lctl) caps  (lsft rsft))
+ ret (fork (tap-hold-release 135 135 ret rctl) (unmod lmet) (lsft rsft))
 )
 
 (deflayer  def

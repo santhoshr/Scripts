@@ -138,3 +138,7 @@
    consult--source-recent-file consult--source-project-recent-file
    :preview-key '(:debounce 0.4 any))
 )
+
+(use-package modus-themes
+  :config
+  (load-theme 'modus-operandi-tinted :no-confirm))

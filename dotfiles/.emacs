@@ -1,17 +1,21 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-fold-core-style 'overlays)
- '(package-selected-packages
-   '(consult embark embark-consult marginalia modus-themes orderless popper vertico hyperbole)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+
+(use-package emacs
+  :custom
+  (custom-set-faces '(default ((t (:family "Consolas" :foundry "outline" :slant normal :weight regular :height 110 :width normal))))))
+
+(use-package package
+  :custom
+  (package-archives '(("gnu" . "https://elpa.gnu.org/packages/") ("melpa-stable" . "https://stable.melpa.org/packages/")))
+  (package-selected-packages
+   '(hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
+
+  :config
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (package-install-selected-packages :noconfirm))
 
 (use-package recentf
   :bind ("C-x C-r" . recentf-open))
@@ -33,13 +37,11 @@
   (marginalia-mode 1))
 
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-override '((file (styles basic partial-completion)))))
 
 (use-package embark
-  :ensure t
   :bind
   (("C-." . embark-act)         
    ("C-;" . embark-dwim)        
@@ -52,12 +54,10 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 (use-package embark-consult
-  :ensure t 
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package popper
-  :ensure t
   :bind (("C-`"   . popper-toggle)
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
@@ -142,3 +142,11 @@
 (use-package modus-themes
   :config
   (load-theme 'modus-operandi-tinted :no-confirm))
+
+
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+	 :map minibuffer-local-completion-map
+	 ("C-x C-d" . consult-dir)
+	 ("C-x C-j" . consult-dir-jump-file)))
+

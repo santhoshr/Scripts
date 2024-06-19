@@ -1,21 +1,3 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(evil-motion-state-modes nil)
- '(org-fold-core-style 'overlays)
- '(package-selected-packages
-   '(magit marginalia consult embark orderless vertico popper hyperbole evil))
- '(warning-suppress-types '((initialization))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
@@ -58,7 +40,7 @@
 (use-package embark
   :bind
   (("M-." . embark-act)         
-   ("C-;" . embark-dwim)        
+   ("C-;" . embark-dwim))        
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
@@ -154,7 +136,7 @@
 
 (use-package modus-themes
   :config
-  (load-theme 'modus-operandi-tinted :no-confirm))
+  (load-theme 'modus-vivendi-tinted :no-confirm))
 
 
 (use-package consult-dir
@@ -171,3 +153,16 @@
 (evil-mode nil)
 (define-key evil-normal-state-map (kbd "q") 'evil-delete-buffer)
 (setq evil-default-state 'emacs) 
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-fold-core-style 'overlays))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 180 :width normal :foundry "nil" :family "Menlo")))))

@@ -1,9 +1,23 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(evil-motion-state-modes nil)
+ '(org-fold-core-style 'overlays)
+ '(package-selected-packages
+   '(magit marginalia consult embark orderless vertico popper hyperbole evil))
+ '(warning-suppress-types '((initialization))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
-
-(use-package emacs
-  :custom
-  (custom-set-faces '(default ((t (:family "Consolas" :foundry "outline" :slant normal :weight regular :height 110 :width normal))))))
 
 (use-package package
   :custom
@@ -43,9 +57,8 @@
 
 (use-package embark
   :bind
-  (("C-." . embark-act)         
+  (("M-." . embark-act)         
    ("C-;" . embark-dwim)        
-   ("C-h B" . embark-bindings)) 
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
@@ -150,3 +163,11 @@
 	 ("C-x C-d" . consult-dir)
 	 ("C-x C-j" . consult-dir-jump-file)))
 
+(global-set-key (kbd "C-x C-k") 'kill-current-buffer)
+(global-set-key (kbd "C-x C-o") 'other-window)
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+
+(require 'evil)
+(evil-mode nil)
+(define-key evil-normal-state-map (kbd "q") 'evil-delete-buffer)
+(setq evil-default-state 'emacs) 

@@ -5,7 +5,7 @@
   :custom
   (package-archives '(("gnu" . "https://elpa.gnu.org/packages/") ("melpa-stable" . "https://stable.melpa.org/packages/")))
   (package-selected-packages
-   '(hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
+   '(evil magit hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
 
   :config
   (package-initialize)
@@ -16,7 +16,12 @@
 (use-package recentf
   :bind ("C-x C-r" . recentf-open))
 
+(use-package ace-window
+  :bind ("C-x o" . ace-window))
+
 (use-package hyperbole
+  :init
+  (hkey-ace-window-setup)
   :demand t
   :config
   (hyperbole-mode 1))
@@ -37,10 +42,16 @@
   (completion-styles '(orderless basic))
   (completion-category-override '((file (styles basic partial-completion)))))
 
+(use-package evil
+  :bind (("C-q" . evil-delete-buffer)))
+
+(require 'evil)
+(evil-mode 1)
+
 (use-package embark
   :bind
   (("M-." . embark-act)         
-   ("C-;" . embark-dwim))        
+   ("C-." . embark-dwim))        
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
@@ -61,6 +72,7 @@
         '("\\*Messages\\*"
 	  "*Scratch*"
 	  "Output\\*$"
+	  "*Buffer List*"
           "\\*Async Shell Command\\*"
           help-mode
           compilation-mode))
@@ -136,7 +148,7 @@
 
 (use-package modus-themes
   :config
-  (load-theme 'modus-vivendi-tinted :no-confirm))
+  (load-theme 'modus-operandi-tinted :no-confirm))
 
 
 (use-package consult-dir
@@ -148,21 +160,30 @@
 (global-set-key (kbd "C-x C-k") 'kill-current-buffer)
 (global-set-key (kbd "C-x C-o") 'other-window)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
+(global-set-key (kbd "C-o") 'other-window)
+(global-set-key (kbd "C-;") 'execute-extended-command)
 
-(require 'evil)
-(evil-mode nil)
-(define-key evil-normal-state-map (kbd "q") 'evil-delete-buffer)
-(setq evil-default-state 'emacs) 
+(use-package magit)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-fold-core-style 'overlays))
+ '(evil-emacs-state-modes
+   '(5x5-mode archive-mode bbdb-mode biblio-selection-mode blackbox-mode bookmark-bmenu-mode bookmark-edit-annotation-mode browse-kill-ring-mode bs-mode bubbles-mode bzr-annotate-mode calc-mode cfw:calendar-mode completion-list-mode Custom-mode custom-theme-choose-mode debugger-mode delicious-search-mode desktop-menu-blist-mode desktop-menu-mode doc-view-mode dun-mode dvc-bookmarks-mode dvc-diff-mode dvc-info-buffer-mode dvc-log-buffer-mode dvc-revlist-mode dvc-revlog-mode dvc-status-mode dvc-tips-mode ediff-mode ediff-meta-mode efs-mode Electric-buffer-menu-mode emms-browser-mode emms-mark-mode emms-metaplaylist-mode emms-playlist-mode ess-help-mode etags-select-mode fj-mode gc-issues-mode gdb-breakpoints-mode gdb-disassembly-mode gdb-frames-mode gdb-locals-mode gdb-memory-mode gdb-registers-mode gdb-threads-mode gist-list-mode git-rebase-mode gnus-article-mode gnus-browse-mode gnus-group-mode gnus-server-mode gnus-summary-mode gomoku-mode google-maps-static-mode ibuffer-mode jde-javadoc-checker-report-mode magit-cherry-mode magit-diff-mode magit-log-mode magit-log-select-mode magit-popup-mode magit-popup-sequence-mode magit-process-mode magit-reflog-mode magit-refs-mode magit-revision-mode magit-stash-mode magit-stashes-mode magit-status-mode mh-folder-mode monky-mode mpuz-mode mu4e-main-mode mu4e-headers-mode mu4e-view-mode notmuch-hello-mode notmuch-search-mode notmuch-show-mode notmuch-tree-mode occur-mode org-agenda-mode package-menu-mode pdf-outline-buffer-mode pdf-view-mode proced-mode rcirc-mode rebase-mode recentf-dialog-mode reftex-select-bib-mode reftex-select-label-mode reftex-toc-mode sldb-mode slime-inspector-mode slime-thread-control-mode slime-xref-mode snake-mode solitaire-mode sr-buttons-mode sr-mode sr-tree-mode sr-virtual-mode tar-mode tetris-mode tla-annotate-mode tla-archive-list-mode tla-bconfig-mode tla-bookmarks-mode tla-branch-list-mode tla-browse-mode tla-category-list-mode tla-changelog-mode tla-follow-symlinks-mode tla-inventory-file-mode tla-inventory-mode tla-lint-mode tla-logs-mode tla-revision-list-mode tla-revlog-mode tla-tree-lint-mode tla-version-list-mode twittering-mode urlview-mode vc-annotate-mode vc-dir-mode vc-git-log-view-mode vc-hg-log-view-mode vc-svn-log-view-mode vm-mode vm-summary-mode w3m-mode wab-compilation-mode xgit-annotate-mode xgit-changelog-mode xgit-diff-mode xgit-revlog-mode xhg-annotate-mode xhg-log-mode xhg-mode xhg-mq-mode xhg-mq-sub-mode xhg-status-extra-mode Buffer-menu-mode))
+ '(evil-motion-state-modes
+   '(apropos-mode calendar-mode color-theme-mode command-history-mode compilation-mode dictionary-mode ert-results-mode help-mode Info-mode Man-mode speedbar-mode undo-tree-visualizer-mode woman-mode))
+ '(org-fold-core-style 'overlays)
+ '(package-selected-packages
+   '(magit evil ace-window hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
+ '(use-short-answers t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 180 :width normal :foundry "nil" :family "Menlo")))))
+
+
+

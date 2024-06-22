@@ -8,6 +8,8 @@
 (global-set-key (kbd "C-x C-o") 'other-window)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 (global-set-key (kbd "C-o") 'other-window)
+(global-set-key (kbd "M-p") 'previous-buffer)
+(global-set-key (kbd "M-n") 'next-buffer)
 (global-set-key (kbd "C-;") 'execute-extended-command)
 (global-set-key "\C-\\" #'(lambda nil (interactive) (kbd-key:act "hga")))
 (global-set-key "\M-\\" #'(lambda nil (interactive) (kbd-key:act "hga")))

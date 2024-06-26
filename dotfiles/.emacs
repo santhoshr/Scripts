@@ -1,3 +1,5 @@
+;; <[magit]>: <magit>
+
 (require 'use-package-ensure)
 
 (defvar bootstrap-version)
@@ -22,46 +24,23 @@
   ;; Use symbola for proper unicode
   (when (member "Symbola" (font-family-list))
     (set-fontset-font
-     t 'symbol "Symbola" nil)))
-        
-(use-package lambda-line
-  :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-  :custom
-  (lambda-line-icon-time t) ;; requires ClockFace font (see below)
-  (lambda-line-clockface-update-fontset "ClockFaceRect") ;; set clock icon
-  (lambda-line-position 'bottom) ;; Set position of status-line 
-  (lambda-line-abbrev nil) ;; abbreviate major modes
-  (lambda-line-hspace " ")  ;; add some cushion
-  (lambda-line-prefix t) ;; use a prefix symbol
-  (lambda-line-prefix-padding t) ;; no extra space for prefix 
-  (lambda-line-status-invert t)  ;; no invert colors
-  (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
-  (lambda-line-gui-mod-symbol " ⬤") 
-  (lambda-line-gui-rw-symbol  " ◯") 
-  (lambda-line-space-top +.150)  ;; padding on top and bottom of line
-  (lambda-line-space-bottom -.150)
-  (lambda-line-symbol-position 0) ;; adjust the vertical placement of symbol
-  :config
-  ;; activate lambda-line 
-  (lambda-line-mode))
+     t 'symbol "Symbola" nil)))        
 
 (setq use-package-always-ensure t)
 (setq vc-follow-symlinks t)
 (setq custom-safe-themes t)
-(setq evil-insert-state-cursor nil)
 (global-set-key (kbd "M-p") 'previous-buffer)
 (global-set-key (kbd "M-n") 'next-buffer)
 (global-set-key (kbd "C-;") 'execute-extended-command)
 (global-set-key "\C-\\" #'(lambda nil (interactive) (kbd-key:act "hga"))) 
-(global-set-key "\M-\\" #'(lambda nil (interactive) (kbd-key:act "hga")))
-(global-set-key (kbd "\e[27;3;13~") 'hkey-either) 
-(global-set-key (kbd "M-RET") 'hkey-either) 
+(global-set-key (kbd "M-<return>") 'hkey-either)
+(global-set-key (kbd "s-<return>") 'hkey-either) 
 
 (use-package package
   :custom
   (package-archives '(("gnu" . "https://elpa.gnu.org/packages/") ("melpa-stable" . "https://stable.melpa.org/packages/") ("cselpa" . "https://elpa.thecybershadow.net/packages/")))
   (package-selected-packages
-   '(term-keys evil magit hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
+   '(term-keys magit hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes))
 
   :config
   (package-initialize)
@@ -116,7 +95,6 @@
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"
-	  "*Scratch*"
 	  "Output\\*$"
 	  "*Buffer List*"
           "\\*Async Shell Command\\*"
@@ -200,10 +178,6 @@
 
 (use-package magit)
 
-(use-package evil
-  :config
-  (evil-mode t))
-
 (use-package spacious-padding
   :config
   (spacious-padding-mode t))
@@ -223,16 +197,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-default-state 'emacs)
- '(evil-disable-insert-state-bindings t)
  '(gnus-inhibit-startup-message t)
+ '(hmouse-middle-flag t)
  '(inhibit-startup-screen t)
  '(lambda-line-position 'top)
  '(lambda-line-prefix-padding t)
  '(lambda-themes-set-vibrant t)
  '(org-fold-core-style 'overlays)
  '(package-selected-packages
-   '(spacious-padding term-keys evil magit hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes) nil nil "Customized with use-package package")
+   '(spacious-padding term-keys magit hyperbole vertico consult consult-dir embark embark-consult marginalia popper orderless modus-themes) nil nil "Customized with use-package package")
+ '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify))
  '(use-short-answers t))
@@ -263,3 +237,11 @@
  '(window-divider-first-pixel ((t (:background "White" :foreground "White"))))
  '(window-divider-last-pixel ((t (:background "White" :foreground "White")))))
 
+;; Set $DICPATH to "$HOME/Library/Spelling" for hunspell.
+(setenv
+  "DICPATH"
+  (concat (getenv "HOME") "/Library/Spelling"))
+;; Tell ispell-mode to use hunspell.
+(setq
+  ispell-program-name
+  "/opt/homebrew/bin/hunspell")

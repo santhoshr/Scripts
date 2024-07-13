@@ -34,6 +34,7 @@
 (global-set-key (kbd "C-;") 'execute-extended-command)
 (global-set-key "\C-\\" #'(lambda nil (interactive) (kbd-key:act "hga"))) 
 (global-set-key (kbd "M-<return>") 'hkey-either)
+(global-set-key (kbd "M-RET") 'hkey-either)
 (global-set-key (kbd "s-<return>") 'hkey-either) 
 
 (use-package package
@@ -190,7 +191,8 @@
   (lambda-themes-set-variable-pitch t) 
   :config
   ;; load preferred theme 
-  (load-theme 'lambda-light))
+  (load-theme 'lambda-dark)
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -216,7 +218,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 220 :width normal :foundry "nil" :family "Iosevka Comfy"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width normal :foundry "nil" :family "Iosevka Comfy"))))
  '(fringe ((t :background "White")))
  '(header-line ((t :box (:line-width 4 :color "grey90" :style nil))))
  '(header-line-highlight ((t :box (:color "Black"))))
@@ -245,3 +247,14 @@
 (setq
   ispell-program-name
   "/opt/homebrew/bin/hunspell")
+
+;; (use-package solo-jazz-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'solo-jazz t))
+
+;; (menu-bar-mode 0)
+;; (load-theme 'doom-one)
+
+(winner-mode t)
+(global-set-key "\M-;" 'comment-line)

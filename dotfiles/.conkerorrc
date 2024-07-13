@@ -1,4 +1,5 @@
 // homepage
+// <javascript-mode>
 homepage = "https://google.co.in"
 
 // duplicate buffer
@@ -9,7 +10,7 @@ interactive("duplicate-buffer", "Duplicate buffer",
 
 // define mappings
 // define_key(content_buffer_normal_keymap, "d", "follow-new-buffer");
-define_key(content_buffer_normal_keymap, "q", "delete-window");
+// define_key(content_buffer_normal_keymap, "q", "delete-window");
 define_key(content_buffer_normal_keymap, "d", "kill-current-buffer");
 define_key(content_buffer_normal_keymap, "j", "cmd_scrollLineDown");
 define_key(content_buffer_normal_keymap, "k", "cmd_scrollLineUp");
@@ -67,7 +68,7 @@ register_user_stylesheet(make_css_data_uri(["* { image-rendering: -moz-crisp-edg
 
 require("block-content-focus-change.js");
 
-block_content_focus_change_duration = 40;
+// block_content_focus_change_duration = 40; 
 
 session_pref("browser.formfill.enable", true);
 
@@ -125,7 +126,7 @@ for (let i = 0; i < 10; ++i) {
     define_switch_buffer_key(String((i+1)%10), i);
 }
 
-define_key(content_buffer_normal_keymap, "s", "browse-buffer-history");
+// define_key(content_buffer_normal_keymap, "s", "browse-buffer-history");
 
 interactive("switch-to-other-buffer",
             "Switch to the previously open buffer",
@@ -322,3 +323,37 @@ user_pref("font.minimum-size.x-western", 14);
 user_pref("font.size.fixed.x-western", 14);
 user_pref("font.size.variable.x-western", 14);
 
+// require("github")
+require("session.js")
+session_auto_save_auto_load = true;
+
+function focusblock (buffer) {
+    var s = Components.utils.Sandbox(buffer.top_frame);
+    s.document = buffer.document.wrappedJSObject;
+    Components.utils.evalInSandbox(
+        "(function () {\
+            function nothing () {}\
+            if (! document.forms)\
+                return;\
+            for (var i = 0, nforms = document.forms.length; i < nforms; i++) {\
+              for (var j = 0, nels = document.forms[i].elements.length; j < nels; j++)\
+                document.forms[i].elements[j].focus = nothing;\
+            }\
+          })();",
+        s);
+}
+add_hook('content_buffer_progress_change_hook', focusblock);
+
+define_key(content_buffer_normal_keymap, "z i", "zoom-in-full");
+define_key(content_buffer_normal_keymap, "z m", "zoom-in-full-more");
+define_key(content_buffer_normal_keymap, "z o", "zoom-out-full");
+define_key(content_buffer_normal_keymap, "z r", "zoom-out-full-more");
+define_key(content_buffer_normal_keymap, "z z", "zoom-reset-full");
+define_key(content_buffer_normal_keymap, "z I", "zoom-in-text");
+define_key(content_buffer_normal_keymap, "z M", "zoom-in-text-more");
+define_key(content_buffer_normal_keymap, "z O", "zoom-out-text");
+define_key(content_buffer_normal_keymap, "z R", "zoom-out-text-more");
+define_key(content_buffer_normal_keymap, "z Z", "zoom-reset-text");
+define_key(content_buffer_normal_keymap, "+", "zoom-in-full");
+define_key(content_buffer_normal_keymap, "=", "zoom-reset-full");
+define_key(content_buffer_normal_keymap, "-", "zoom-out-full");
